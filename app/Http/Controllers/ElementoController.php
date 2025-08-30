@@ -2,65 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Elemento;
 use Illuminate\Http\Request;
 
 class ElementoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-   public function index()
-{
-    $elementos = Elemento::all();
-    return view('elementos.index', compact('elementos'));
-}
+    public function index()
+    {
+        $elementos = Elemento::all();
+        return view('elementos.index', compact('elementos'));
+    }
 
+    public function create()
+    {
+        return view('elementos.create');
+    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-   public function create()
-{
-    return view('elementos.create'); // asegurate de que la vista exista
-}
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'tipo' => 'required|string|max:255',
+            'cantidad' => 'required|integer|min:1',
+        ]);
+
+        Elemento::create($request->all());
+        return redirect()->route('elementos.index')->with('success', 'Elemento creado con éxito.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Elemento $elemento)
     {
-        //
+        return view('elementos.edit', compact('elemento'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Elemento $elemento)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'tipo' => 'required|string|max:255',
+            'cantidad' => 'required|integer|min:1',
+        ]);
+
+        $elemento->update($request->all());
+        return redirect()->route('elementos.index')->with('success', 'Elemento actualizado con éxito.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Elemento $elemento)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $elemento->delete();
+        return redirect()->route('elementos.index')->with('success', 'Elemento eliminado con éxito.');
     }
 }
