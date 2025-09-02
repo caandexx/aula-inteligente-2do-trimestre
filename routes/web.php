@@ -19,3 +19,8 @@ Route::resource('docentes', DocenteController::class);
 // --- Rutas de Elementos ---
 Route::resource('elementos', ElementoController::class);
 
+Route::get('/pokemon-chart', function () {
+    return view('pokemon'); // debe coincidir con el nombre del Blade
+});
+
+
